@@ -252,9 +252,29 @@
       <audio data-key="112" src="./pianoSounds/high_b.mp3"></audio>
     </main>
   </body>
-
   <script>
+ /* ===================================================================STEP-1============================================================================== */   
+
+/* In between the script tags declare a new event listener on our window object and provide it two arguments, 
+   the event to listen for and the handler to fire once that event has occurred.
+   Add a single argument to the handler that will represent our event.
+   The event argument is implicitly passed with information about the key-press event that occurred.
+   One piece of information that will be passed along will be the keyCode of the key that was pressed.
+   This keyCode will correlate with the data-key attribute assigned to our polygons and audio tags. */
     window.addEventListener("keypress", function(keyPressEvent) {
+  
+/* ===================================================================STEP-1=============================================================================== */
+
+
+/* ==========================================================================STEP-2======================================================================== */   
+
+/* Within the handler of our event listener, add 2 variables.
+   One that references the tone or the audio tag that we want to play.
+   One that references the pianoKey or the polygon that should be active when the key is pressed.
+   You can access the tone and pianoKey using a selector and our keyCode as mentioned above.
+   Add a condition to check if our tone is falsy.
+   If it is, return.
+   This will trim down on the amount of work our application needs to do when an invalid key is pressed. */
       const tone = document.querySelector(
         `audio[data-key="${keyPressEvent.keyCode}"]`
       );
@@ -262,12 +282,42 @@
       const pianoKey = document.querySelector(
         `.pianoKey[data-key="${keyPressEvent.keyCode}"]`
       );
+  
+
+/* ========================================================================STEP-2========================================================================= */
+
+
+/* ========================================================================STEP-3========================================================================= */
+
+/* Within the handler of our event listener invoke the play method on our tone audio element.
+   You should now be able to click one of the valid keys and hear the tone played.
+   But OH NO! When we press the key consecutively, it doesn't restart the tone, but instead allows the current tone to finish playing.
+   To fix this, set the currentTime of the tone to 0 before we play the tone.
+   Now, when a key is pressed, it will stop the current tone and start the fresh one! */      
       tone.currentTime = 0;
-      pianoKey.classList.add("pressed");
+      pianoKey.classList.add("pressed"); /* This line is part of STEP-4 */
       tone.play();
+
+/* ========================================================================STEP-3========================================================================= */
+
+
+/* ========================================================================STEP-4========================================================================= */
+
+/* Within the handler of our event listener, before play and after setting the currentTime to 0, add the class pressed to our pianoKey element.
+   If you try it now, you'll notice that each time a key on the keyboard is pressed, its associated pianoKey is changed; 
+   however, it never changes back when the key is no longer active!
+   After our tone plays, remove the class pressed from our pianoKey element.
+   You'll now notice that it appears that our key never receives the class.
+   This occurs because the class is being added an removed almost instantly.
+   To slow this down, wrap the class removal in a setTimeout, to be removed after 300ms.
+   You should now have keys that appear pressed when a note is played.
+   You should also have a fully functional piano that plays notes and gives the appearance of pressed keys. 
+   Feel free to remap the keys using the data-key attribute and the associated keyCode from each key on the keyboard. */         
       setTimeout(function() {
         pianoKey.classList.remove("pressed");
       }, 300);
     });
+
+/* ========================================================================STEP-4========================================================================= */
   </script>
 </html>
